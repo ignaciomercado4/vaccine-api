@@ -2,16 +2,16 @@ package handlers
 
 import (
 	"net/http"
+	"vaccine-api/middleware"
 	"vaccine-api/models"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
 
-type SignUpRequest struct {
-	Name     string `gorm:"not null" json:"name"`
-	Email    string `gorm:"not null" json:"email"`
-	Password string `gorm:"not null" json:"password"`
+type LoginRequest struct {
+	Email    string `json:"email" binding:"required"`
+	Password string `json:"password" binding:"required"`
 }
 
 type UserHandler struct {
@@ -21,19 +21,67 @@ type UserHandler struct {
 func CreateUser(h *UserHandler) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var newUser models.User
-
-		if err := ctx.ShouldBind(&newUser); err != nil {
-			ctx.JSON(http.StatusInternalServerError, gin.H{
-				"error": err.Error(),
+		if err := ctx.ShouldBindJSON(&newUser); err != nil {
+			ctx.JSON(http.StatusBadRequest, gin.H{
+				"error": "Invalid request data: " + err.Error(),
 			})
-
 			return
 		}
 
-		h.DB.Create(&newUser)
+		if result := h.DB.Create(&newUser); result.Error != nil {
+			ctx.JSON(http.StatusInternalServerError, gin.H{
+				"error": "Error creating user",
+			})
+			return
+		}
+
+		ctx.JSON(http.StatusCreated, gin.H{
+			"message": "User created successfully",
+			"user":    newUser,
+		})
+	}
+}
+
+func Login(h *UserHandler) gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		var loginReq LoginRequest
+		if err := ctx.ShouldBindJSON(&loginReq); err != nil {
+			ctx.JSON(http.StatusBadRequest, gin.H{
+				"error": "Invalid request data",
+			})
+			return
+		}
+
+		var user models.User
+		result := h.DB.Where("email = ?", loginReq.Email).First(&user)
+		if result.Error != nil {
+			ctx.JSON(http.StatusUnauthorized, gin.H{
+				"error": "Invalid credentials",
+			})
+			return
+		}
+
+		if loginReq.Password != user.Password {
+			ctx.JSON(http.StatusUnauthorized, gin.H{
+				"error": "Invalid credentials",
+			})
+			return
+		}
+
+		token, err := middleware.GenerateToken(user.ID, user.Email)
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError, gin.H{
+				"error": "Error generating token",
+			})
+			return
+		}
+
 		ctx.JSON(http.StatusOK, gin.H{
-			"status": "user created",
-			"user":   newUser,
+			"token": token,
+			"user": gin.H{
+				"id":    user.ID,
+				"email": user.Email,
+			},
 		})
 	}
 }
