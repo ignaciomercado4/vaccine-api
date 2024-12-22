@@ -30,6 +30,7 @@ func main() {
 	})
 
 	router.POST("/createUser", handlers.CreateUser(&userHandler))
+	router.POST("/login", handlers.Login(&userHandler))
 
 	router.Run()
 }
