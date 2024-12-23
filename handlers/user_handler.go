@@ -47,7 +47,7 @@ func Login(h *UserHandler) gin.HandlerFunc {
 		var loginReq LoginRequest
 		if err := ctx.ShouldBindJSON(&loginReq); err != nil {
 			ctx.JSON(http.StatusBadRequest, gin.H{
-				"error": "Invalid request data",
+				"error": err.Error(),
 			})
 			return
 		}
@@ -56,7 +56,7 @@ func Login(h *UserHandler) gin.HandlerFunc {
 		result := h.DB.Where("email = ?", loginReq.Email).First(&user)
 		if result.Error != nil {
 			ctx.JSON(http.StatusUnauthorized, gin.H{
-				"error": "Invalid credentials",
+				"error": "User matching provided email not found",
 			})
 			return
 		}
