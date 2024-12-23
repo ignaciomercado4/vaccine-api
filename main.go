@@ -36,6 +36,7 @@ func main() {
 
 	router.POST("/drugs", middleware.AuthMiddleware(), handlers.CreateDrug(&drugHandler))
 	router.GET("/drugs", middleware.AuthMiddleware(), handlers.GetDrugs(&drugHandler))
+	router.DELETE("/drugs/:id", middleware.AuthMiddleware(), handlers.DeleteDrug(&drugHandler))
 
 	router.Run()
 }

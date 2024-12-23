@@ -53,3 +53,30 @@ func GetDrugs(h *DrugHandler) gin.HandlerFunc {
 		})
 	}
 }
+
+func DeleteDrug(h *DrugHandler) gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		drugId := ctx.Param("id")
+
+		var drug models.Drug
+		result := h.DB.First(&drug, drugId)
+
+		if result.Error != nil {
+			ctx.JSON(http.StatusInternalServerError, gin.H{
+				"error": result.Error,
+			})
+		}
+
+		if drug.ID == 0 {
+			ctx.JSON(http.StatusInternalServerError, gin.H{
+				"error": "Drug not found",
+			})
+		}
+
+		h.DB.Delete(&drug)
+
+		ctx.JSON(http.StatusOK, gin.H{
+			"message": "Drug deleted succesfully",
+		})
+	}
+}
