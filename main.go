@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"vaccine-api/database"
 	"vaccine-api/handlers"
+	"vaccine-api/middleware"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
@@ -22,6 +23,7 @@ func main() {
 	database.MigrateModels(db)
 
 	userHandler := handlers.UserHandler{DB: db}
+	drugHandler := handlers.DrugHandler{DB: db}
 
 	router.GET("/health", func(ctx *gin.Context) {
 		ctx.JSON(http.StatusOK, gin.H{
@@ -31,6 +33,8 @@ func main() {
 
 	router.POST("/createUser", handlers.CreateUser(&userHandler))
 	router.POST("/login", handlers.Login(&userHandler))
+
+	router.POST("/createDrug", middleware.AuthMiddleware(), handlers.CreateDrug(&drugHandler))
 
 	router.Run()
 }
