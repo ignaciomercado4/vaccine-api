@@ -35,3 +35,21 @@ func CreateDrug(h *DrugHandler) gin.HandlerFunc {
 		})
 	}
 }
+
+func GetDrugs(h *DrugHandler) gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		var drugs []models.Drug
+
+		result := h.DB.Find(&drugs)
+
+		if result.Error != nil {
+			ctx.JSON(http.StatusInternalServerError, gin.H{
+				"error": result.Error,
+			})
+		}
+
+		ctx.JSON(http.StatusOK, gin.H{
+			"drugs": drugs,
+		})
+	}
+}

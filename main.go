@@ -31,10 +31,11 @@ func main() {
 		})
 	})
 
-	router.POST("/createUser", handlers.CreateUser(&userHandler))
+	router.POST("/signup", handlers.CreateUser(&userHandler))
 	router.POST("/login", handlers.Login(&userHandler))
 
-	router.POST("/createDrug", middleware.AuthMiddleware(), handlers.CreateDrug(&drugHandler))
+	router.POST("/drugs", middleware.AuthMiddleware(), handlers.CreateDrug(&drugHandler))
+	router.GET("/drugs", middleware.AuthMiddleware(), handlers.GetDrugs(&drugHandler))
 
 	router.Run()
 }

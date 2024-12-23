@@ -27,7 +27,7 @@ curl -X POST http://localhost:8080/login \
 
 Drug creation:
 ```
-curl -X POST http://localhost:8080/createDrug \
+curl -X POST http://localhost:8080/drug \
 -H "Content-Type: application/json" \
 -H "Authorization: Bearer your_jwt_token" \
 -d '{
@@ -37,6 +37,13 @@ curl -X POST http://localhost:8080/createDrug \
   "maxDose": 1,
   "availableAt": "2024-12-22T00:00:00Z"
 }'
+```
+
+Get all drugs:
+```
+curl -X GET http://localhost:8080/drugs \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer your_jwt_token"
 ```
 
 ### Frontend
