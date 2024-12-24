@@ -4,7 +4,7 @@ REST API made following a take-home coding challenge. Task available [here](http
 ### Request examples
 User creation:
 ```
-curl -X POST http://localhost:8080/createUser \
+curl -X POST http://localhost:8080/api/signup \
 -H "Content-Type: application/json" \
 -d '{
   "name": "test",
@@ -15,7 +15,7 @@ curl -X POST http://localhost:8080/createUser \
 
 User login:
 ```
-curl -X POST http://localhost:8080/login \
+curl -X POST http://localhost:8080/api/login \
 -H "Content-Type: application/json" \
 -d '{
   "name": "test",
@@ -27,9 +27,9 @@ curl -X POST http://localhost:8080/login \
 
 Drug creation:
 ```
-curl -X POST http://localhost:8080/drug \
+curl -X POST http://localhost:8080/api/drug \
 -H "Content-Type: application/json" \
--H "Authorization: Bearer your_jwt_token" \
+-H "Authorization: Bearer <your_jwt_token>" \
 -d '{
   "name": "drug1",
   "approved": true,
@@ -41,9 +41,57 @@ curl -X POST http://localhost:8080/drug \
 
 Get all drugs:
 ```
-curl -X GET http://localhost:8080/drugs \
+curl -X GET http://localhost:8080/api/drugs \
 -H "Content-Type: application/json" \
--H "Authorization: Bearer your_jwt_token"
+-H "Authorization: Bearer <your_jwt_token>"
+```
+
+Delete a drug:
+```
+curl -X DELETE http://localhost:8080/api/drugs/1 \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer <your_jwt_token>"
+```
+
+Modify an existing drug:
+```
+curl -X PUT http://localhost:8080/api/drugs/1 \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer <your_jwt_token>" \
+-d '{
+  "name": "drug1modified",
+  "approved": false,
+  "minDose": 2,
+  "maxDose": 2,
+  "availableAt": "2025-12-22T00:00:00Z"
+}'
+```
+
+Vaccination creation:
+```
+curl -X POST http://localhost:8080/api/vaccination \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer <your_jwt_token>" \
+-d '{
+  "name": "vaccination1",
+  "drugId": 1,
+  "dose": 2,
+  "date": "2025-12-23T00:00:00Z"
+}'
+```
+
+Get all vaccinations:
+```
+curl -X GET http://localhost:8080/api/vaccination \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer <your_jwt_token>"
+```
+
+Delete a vaccination:
+```
+curl -X DELETE http://localhost:8080/api/vaccination/1 \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer <your_jwt_token>"
 ```
 
 ### Frontend
