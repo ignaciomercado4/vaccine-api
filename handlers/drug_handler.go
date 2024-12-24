@@ -20,6 +20,7 @@ func CreateDrug(h *DrugHandler) gin.HandlerFunc {
 			ctx.JSON(http.StatusInternalServerError, gin.H{
 				"error": err.Error(),
 			})
+			return
 		}
 
 		result := h.DB.Create(&newDrug)
