@@ -89,3 +89,32 @@ func GetVaccinations(h *VaccinationHandler) gin.HandlerFunc {
 		})
 	}
 }
+
+func DeleteVaccination(h *VaccinationHandler) gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		vaccinationId := ctx.Param("id")
+
+		var vaccination models.Vaccination
+		result := h.DB.First(&vaccination, vaccinationId)
+
+		if result.Error != nil {
+			ctx.JSON(http.StatusInternalServerError, gin.H{
+				"error": result.Error,
+			})
+			return
+		}
+
+		if result.Error == gorm.ErrRecordNotFound {
+			ctx.JSON(http.StatusInternalServerError, gin.H{
+				"error": "Vaccination not found",
+			})
+			return
+		}
+
+		h.DB.Delete(&vaccination)
+
+		ctx.JSON(http.StatusOK, gin.H{
+			"message": "Vaccination deleted succesfully",
+		})
+	}
+}

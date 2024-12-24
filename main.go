@@ -42,6 +42,7 @@ func main() {
 
 	router.POST("/vaccination", middleware.AuthMiddleware(), handlers.CreateVaccination(&vaccinationHandler))
 	router.GET("/vaccination", middleware.AuthMiddleware(), handlers.GetVaccinations(&vaccinationHandler))
+	router.DELETE("/vaccinaction/:id", middleware.AuthMiddleware(), handlers.DeleteVaccination(&vaccinationHandler))
 
 	router.Run()
 }
