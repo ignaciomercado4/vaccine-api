@@ -6,7 +6,6 @@ import (
 	"vaccine-api/models"
 
 	"github.com/gin-gonic/gin"
-	"gorm.io/gorm"
 )
 
 type LoginRequest struct {
@@ -14,11 +13,7 @@ type LoginRequest struct {
 	Password string `json:"password" binding:"required"`
 }
 
-type UserHandler struct {
-	DB *gorm.DB
-}
-
-func CreateUser(h *UserHandler) gin.HandlerFunc {
+func CreateUser(h *AppHandler) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var newUser models.User
 		if err := ctx.ShouldBindJSON(&newUser); err != nil {
@@ -42,7 +37,7 @@ func CreateUser(h *UserHandler) gin.HandlerFunc {
 	}
 }
 
-func Login(h *UserHandler) gin.HandlerFunc {
+func Login(h *AppHandler) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var loginReq LoginRequest
 		if err := ctx.ShouldBindJSON(&loginReq); err != nil {

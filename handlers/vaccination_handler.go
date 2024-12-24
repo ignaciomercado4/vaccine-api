@@ -8,11 +8,7 @@ import (
 	"gorm.io/gorm"
 )
 
-type VaccinationHandler struct {
-	DB *gorm.DB
-}
-
-func CreateVaccination(h *VaccinationHandler) gin.HandlerFunc {
+func CreateVaccination(h *AppHandler) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var newVaccination models.Vaccination
 
@@ -71,7 +67,7 @@ func CreateVaccination(h *VaccinationHandler) gin.HandlerFunc {
 	}
 }
 
-func GetVaccinations(h *VaccinationHandler) gin.HandlerFunc {
+func GetVaccinations(h *AppHandler) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var vaccinations []models.Vaccination
 
@@ -90,7 +86,7 @@ func GetVaccinations(h *VaccinationHandler) gin.HandlerFunc {
 	}
 }
 
-func DeleteVaccination(h *VaccinationHandler) gin.HandlerFunc {
+func DeleteVaccination(h *AppHandler) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		vaccinationId := ctx.Param("id")
 

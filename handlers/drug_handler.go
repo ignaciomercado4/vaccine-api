@@ -8,11 +8,7 @@ import (
 	"gorm.io/gorm"
 )
 
-type DrugHandler struct {
-	DB *gorm.DB
-}
-
-func CreateDrug(h *DrugHandler) gin.HandlerFunc {
+func CreateDrug(h *AppHandler) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var newDrug models.Drug
 
@@ -38,7 +34,7 @@ func CreateDrug(h *DrugHandler) gin.HandlerFunc {
 	}
 }
 
-func GetDrugs(h *DrugHandler) gin.HandlerFunc {
+func GetDrugs(h *AppHandler) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var drugs []models.Drug
 
@@ -57,7 +53,7 @@ func GetDrugs(h *DrugHandler) gin.HandlerFunc {
 	}
 }
 
-func DeleteDrug(h *DrugHandler) gin.HandlerFunc {
+func DeleteDrug(h *AppHandler) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		drugId := ctx.Param("id")
 
@@ -86,7 +82,7 @@ func DeleteDrug(h *DrugHandler) gin.HandlerFunc {
 	}
 }
 
-func UpdateDrug(h *DrugHandler) gin.HandlerFunc {
+func UpdateDrug(h *AppHandler) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		drugId := ctx.Param("id")
 

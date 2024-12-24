@@ -2,10 +2,9 @@ package main
 
 import (
 	"log"
-	"net/http"
 	"vaccine-api/database"
 	"vaccine-api/handlers"
-	"vaccine-api/middleware"
+	"vaccine-api/routes"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
@@ -22,27 +21,7 @@ func main() {
 
 	database.MigrateModels(db)
 
-	userHandler := handlers.UserHandler{DB: db}
-	drugHandler := handlers.DrugHandler{DB: db}
-	vaccinationHandler := handlers.VaccinationHandler{DB: db}
-
-	router.GET("/health", func(ctx *gin.Context) {
-		ctx.JSON(http.StatusOK, gin.H{
-			"status": "OK",
-		})
-	})
-
-	router.POST("/signup", handlers.CreateUser(&userHandler))
-	router.POST("/login", handlers.Login(&userHandler))
-
-	router.POST("/drugs", middleware.AuthMiddleware(), handlers.CreateDrug(&drugHandler))
-	router.GET("/drugs", middleware.AuthMiddleware(), handlers.GetDrugs(&drugHandler))
-	router.DELETE("/drugs/:id", middleware.AuthMiddleware(), handlers.DeleteDrug(&drugHandler))
-	router.PUT("/drugs/:id", middleware.AuthMiddleware(), handlers.UpdateDrug(&drugHandler))
-
-	router.POST("/vaccination", middleware.AuthMiddleware(), handlers.CreateVaccination(&vaccinationHandler))
-	router.GET("/vaccination", middleware.AuthMiddleware(), handlers.GetVaccinations(&vaccinationHandler))
-	router.DELETE("/vaccinaction/:id", middleware.AuthMiddleware(), handlers.DeleteVaccination(&vaccinationHandler))
+	routes.GetRoutes(router, handlers.AppHandler{DB: db})
 
 	router.Run()
 }
