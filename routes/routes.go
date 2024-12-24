@@ -30,9 +30,10 @@ func GetRoutes(router *gin.Engine, appHandler handlers.AppHandler) {
 
 		vaccination := api.Group("/vaccination")
 		{
-			vaccination.POST("/vaccination", middleware.AuthMiddleware(), handlers.CreateVaccination(&appHandler))
-			vaccination.GET("/vaccination", middleware.AuthMiddleware(), handlers.GetVaccinations(&appHandler))
-			vaccination.DELETE("/vaccinaction/:id", middleware.AuthMiddleware(), handlers.DeleteVaccination(&appHandler))
+			vaccination.POST("/", middleware.AuthMiddleware(), handlers.CreateVaccination(&appHandler))
+			vaccination.GET("/", middleware.AuthMiddleware(), handlers.GetVaccinations(&appHandler))
+			vaccination.PUT("/:id", middleware.AuthMiddleware(), handlers.UpdateDrug(&appHandler))
+			vaccination.DELETE("/:id", middleware.AuthMiddleware(), handlers.DeleteVaccination(&appHandler))
 		}
 	}
 }
