@@ -32,15 +32,15 @@ func CreateVaccination(h *VaccinationHandler) gin.HandlerFunc {
 			})
 			return
 		}
-		if result.Error == gorm.ErrRecordNotFound {
+		if selectedDrug.ID == 0 {
 			ctx.JSON(http.StatusInternalServerError, gin.H{
 				"error": "Drug not found",
 			})
 			return
 		}
 
-		if newVaccination.Dose >= selectedDrug.MaxDose ||
-			newVaccination.Dose <= selectedDrug.MinDose {
+		if newVaccination.Dose > selectedDrug.MaxDose ||
+			newVaccination.Dose < selectedDrug.MinDose {
 			ctx.JSON(http.StatusInternalServerError, gin.H{
 				"error":       "Selected drug dose invalid",
 				"minDrugDose": selectedDrug.MinDose,
@@ -49,9 +49,9 @@ func CreateVaccination(h *VaccinationHandler) gin.HandlerFunc {
 			return
 		}
 
-		if !newVaccination.Date.After(selectedDrug.AvailableAt) {
+		if !newVaccination.Date.UTC().After(selectedDrug.AvailableAt.UTC()) {
 			ctx.JSON(http.StatusInternalServerError, gin.H{
-				"error":           "Drug unavailable in the selected date",
+				"error":           "Drug unavailable on the selected date",
 				"drugAvailableAt": selectedDrug.AvailableAt,
 			})
 			return
@@ -67,6 +67,25 @@ func CreateVaccination(h *VaccinationHandler) gin.HandlerFunc {
 
 		ctx.JSON(http.StatusOK, gin.H{
 			"vaccination": newVaccination,
+		})
+	}
+}
+
+func GetVaccinations(h *VaccinationHandler) gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		var vaccinations []models.Vaccination
+
+		result := h.DB.Find(&vaccinations)
+
+		if result.Error != nil {
+			ctx.JSON(http.StatusInternalServerError, gin.H{
+				"error": result.Error.Error(),
+			})
+			return
+		}
+
+		ctx.JSON(http.StatusOK, gin.H{
+			"drugs": vaccinations,
 		})
 	}
 }

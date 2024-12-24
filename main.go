@@ -24,6 +24,7 @@ func main() {
 
 	userHandler := handlers.UserHandler{DB: db}
 	drugHandler := handlers.DrugHandler{DB: db}
+	vaccinationHandler := handlers.VaccinationHandler{DB: db}
 
 	router.GET("/health", func(ctx *gin.Context) {
 		ctx.JSON(http.StatusOK, gin.H{
@@ -38,6 +39,9 @@ func main() {
 	router.GET("/drugs", middleware.AuthMiddleware(), handlers.GetDrugs(&drugHandler))
 	router.DELETE("/drugs/:id", middleware.AuthMiddleware(), handlers.DeleteDrug(&drugHandler))
 	router.PUT("/drugs/:id", middleware.AuthMiddleware(), handlers.UpdateDrug(&drugHandler))
+
+	router.POST("/vaccination", middleware.AuthMiddleware(), handlers.CreateVaccination(&vaccinationHandler))
+	router.GET("/vaccination", middleware.AuthMiddleware(), handlers.GetVaccinations(&vaccinationHandler))
 
 	router.Run()
 }
