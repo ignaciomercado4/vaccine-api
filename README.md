@@ -94,5 +94,17 @@ curl -X DELETE http://localhost:8080/api/vaccination/1 \
 -H "Authorization: Bearer <your_jwt_token>"
 ```
 
+Vaccination update:
+```
+curl -X PUT http://localhost:8080/api/vaccination/2 \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer <your_jwt_token>" \
+-d '{
+  "name": "vaccination1modify",
+  "drugId": 2,
+  "dose": 3,
+  "date": "2021-12-23T00:00:00Z"
+}'
+
 ### Frontend
 Not done yet :P.
