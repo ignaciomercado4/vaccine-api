@@ -27,7 +27,7 @@ curl -X POST http://localhost:8080/api/login \
 
 Drug creation:
 ```
-curl -X POST http://localhost:8080/api/drug \
+curl -X POST http://localhost:8080/api/drugs \
 -H "Content-Type: application/json" \
 -H "Authorization: Bearer <your_jwt_token>" \
 -d '{
