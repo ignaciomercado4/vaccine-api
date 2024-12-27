@@ -80,3 +80,12 @@ func Login(h *AppHandler) gin.HandlerFunc {
 		})
 	}
 }
+
+func Logout(h *AppHandler) gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		ctx.JSON(http.StatusOK, gin.H{
+			"token":   "",
+			"message": "Logout successful",
+		})
+	}
+}

@@ -19,6 +19,7 @@ func GetRoutes(router *gin.Engine, appHandler handlers.AppHandler) {
 	{
 		api.POST("/signup", handlers.CreateUser(&appHandler))
 		api.POST("/login", handlers.Login(&appHandler))
+		api.POST("/logout", handlers.Logout(&appHandler))
 
 		drugs := api.Group("/drugs")
 		{
