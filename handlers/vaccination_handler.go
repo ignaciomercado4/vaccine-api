@@ -79,7 +79,7 @@ func GetVaccinations(h *AppHandler) gin.HandlerFunc {
 		}
 
 		ctx.JSON(http.StatusOK, gin.H{
-			"drugs": vaccinations,
+			"vaccinations": vaccinations,
 		})
 	}
 }
